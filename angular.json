@@ -31,7 +31,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/primeng/resources/themes/saga-blue/theme.css"
             ],
             "scripts": []
           },
@@ -122,6 +126,46 @@
             "production": {
               "devServerTarget": "oxum-login-page-demo:serve:production"
             }
+          }
+        }
+      }
+    },
+    "oxum-login-page": {
+      "projectType": "library",
+      "root": "projects/oxum-login-page",
+      "sourceRoot": "projects/oxum-login-page/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/oxum-login-page/tsconfig.lib.json",
+            "project": "projects/oxum-login-page/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/oxum-login-page/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/oxum-login-page/src/test.ts",
+            "tsConfig": "projects/oxum-login-page/tsconfig.spec.json",
+            "karmaConfig": "projects/oxum-login-page/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/oxum-login-page/tsconfig.lib.json",
+              "projects/oxum-login-page/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }

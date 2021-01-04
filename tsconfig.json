@@ -19,7 +19,13 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "oxum-login-page": [
+        "dist/oxum-login-page/oxum-login-page",
+        "dist/oxum-login-page"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

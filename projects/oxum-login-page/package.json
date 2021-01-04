@@ -1,0 +1,15 @@
+{
+  "name": "oxum-login-page",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^11.0.5",
+    "@angular/core": "^11.0.5",
+    "primeng": "^11.0.0-rc.1",
+    "primeicons": "^4.0.0",
+    "angularx-social-login": "^3.5.4",
+    "primeflex": "^2.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

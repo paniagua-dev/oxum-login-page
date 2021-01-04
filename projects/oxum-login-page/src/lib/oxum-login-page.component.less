@@ -1,0 +1,38 @@
+.loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+p-message {
+    width: 100%;
+
+    ::ng-deep .p-inline-message.p-inline-message-error {
+        width: 100%;
+    }
+}
+
+
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    ::ng-deep {
+        .p-card {
+            min-width: 200px;
+            width: 100%;
+            max-width: 350px;
+
+            .p-card-body {
+                padding-top: 0;
+            }
+        }
+
+        .p-avatar.p-avatar-image {
+            width: auto;
+            height: 4rem;
+            max-width: 10rem;
+        }
+    }
+}

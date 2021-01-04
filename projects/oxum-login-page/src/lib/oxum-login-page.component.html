@@ -1,0 +1,39 @@
+<div>
+    <p-card>
+        <ng-template [pTemplate]="'header'">
+            <div class="p-text-center">
+                <p-avatar [image]="logoPath" styleClass="p-mx-auto" size="xlarge"></p-avatar>
+            </div>
+        </ng-template>
+        <form class="p-p-2" [formGroup]="loginForm" (ngSubmit)="submit()">
+            <div class="p-inputgroup p-mb-3">
+                <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                <input required type="text" pInputText placeholder="Username" formControlName="username">
+            </div>
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                <input required type="password" pInputText placeholder="Password" formControlName="password">
+            </div>
+            <div class="p-inputgroup">
+                <button
+                    pButton
+                    [label]="buttonLabel"
+                    [ngClass]="{'loading': loading}"
+                    class="p-col-12 p-mt-3"
+                    icon="pi pi-sign-in"
+                    [disabled]="disabled">
+                </button>
+            </div>
+            <div class="p-inputgroup" *ngIf="enableSignInWithGoogle">
+                <button
+                    pButton
+                    [label]="'Sign in with Google'"
+                    class="p-col-12 p-mt-3"
+                    (click)="this.authService.signInWithGoogle()"
+                    icon="pi pi-google">
+                </button>
+            </div>
+            <p-message *ngIf="error" severity="error" text="Wrong user or password" class="p-d-flex p-mt-4"></p-message>
+        </form>
+    </p-card>
+</div>
