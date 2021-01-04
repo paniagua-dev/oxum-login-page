@@ -1,4 +1,4 @@
-# OxumLoginPage
+# Oxum Login Page
 
 This is a simple library to display a login page with Google Sign in
 
@@ -48,7 +48,6 @@ Oxum Login Page use Primeng to works. If you want to enable the style, please ad
 
 ```json
 "styles": [
-  ...
   "node_modules/primeicons/primeicons.css",
   "node_modules/primeng/resources/primeng.min.css",
   "node_modules/primeflex/primeflex.css",
