@@ -11,8 +11,8 @@ import {OxumAuthService} from './oxum-auth.service';
 export class OxumLoginPageComponent implements OnInit {
     @Input() loginUrl: string = '';
     @Input() enableSignInWithGoogle: boolean | undefined;
-    public buttonLabel = 'Login';
     @Input() logoPath: string = 'assets/logo.png';
+    public buttonLabel = 'Login';
     public loginForm: FormGroup = new FormGroup({
         username: new FormControl(''),
         password: new FormControl(''),
