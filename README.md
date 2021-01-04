@@ -1,27 +1,143 @@
-# OxumLoginPageDemo
+# OxumLoginPage
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
+This is a simple library to display a login page with Google Sign in
 
-## Development server
+## Get started
+```
+npm install oxum-login-page --save
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Import the module and run forRoot method
+```js
+@NgModule({
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        BrowserModule,
+        OxumLoginPageModule.forRoot('[yourGoogleKey].apps.googleusercontent.com'),
+    ],
+    bootstrap: [AppComponent],
+})
+export class AppModule {
+}
+```
+where `[yourGoogleKey]` is the key of your Google Api Oauth. See https://developers.google.com/identity/protocols/oauth2
 
-## Code scaffolding
+## Enable Auth Service
+Then, in your main module import as provider the OxumAuth Service:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```js
+@NgModule({
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        BrowserModule,
+        OxumLoginPageModule.forRoot('[yourGoogleKey].apps.googleusercontent.com'),
+    ],
+    providers: [OxumAuthService], // Here the OxumAuthService
+    bootstrap: [AppComponent],
+})
+export class AppModule {
+}
+```
 
-## Build
+## Enable style
+Oxum Login Page use Primeng to works. If you want to enable the style, please add next lines in your angular.json:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```json
+"styles": [
+  ...
+  "node_modules/primeicons/primeicons.css",
+  "node_modules/primeng/resources/primeng.min.css",
+  "node_modules/primeflex/primeflex.css",
+],
+``` 
+## Inputs
 
-## Running unit tests
+Here you have the list of options:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```ts
+@Input logoPath: string = "(optional) Path to the logo, by default 'assets/logo.png'";
+@Input loginUrl: string = "(optional) Url to call after the user is logged.";
+@Input enableSignInWithGoogle: boolean = "(optional) Enable the button sign in with Google";
+```
+Example:
 
-## Running end-to-end tests
+```html
+<main class="p-d-flex p-flex-column">
+    <oxum-login-page [enableSignInWithGoogle]="true"></oxum-login-page>
+</main>
+```
+## Auth Service methods
+The auth service can inform you when a user is logged in. For that you can listen the BehaviourSubject `isLogged$`
+```ts
+@Component({
+    selector: 'app-root',
+    ...
+})
+export class AppComponent implements OnInit {
+    logged$ = this.auth.isLogged$;
+    constructor(public auth: OxumAuthService) {
+    }
+}
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
 
-## Further help
+```html
+<main class="p-d-flex p-flex-column">
+    <ng-container *ngIf="logged$ | async; else loginTemplate">
+        <h1>Connected</h1>
+    </ng-container>
+    <ng-template #loginTemplate>
+        <oxum-login-page></oxum-login-page>
+    </ng-template>
+</main>
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Auth Interceptor
+Oxum Login Page provides an interceptor that will disconnect the user for each http 403 response.
+Here is an example to set up this interceptor:
+
+```ts
+//imports
+
+export const AuthInterceptorFactory = (authService: OxumAuthService) => {
+    return new OxumAuthInterceptor(authService);
+};
+
+@NgModule({
+    declarations: [
+        AppComponent, 
+        //...
+    ],
+    imports: [
+        BrowserModule,
+        OxumLoginPageModule.forRoot('[YourKey].apps.googleusercontent.com'),
+        //...
+    ],
+    providers: [
+        //...
+        OxumAuthService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useExisting: OxumAuthInterceptor,
+            multi: true,
+            deps: [OxumAuthService],
+        },
+        {
+            provide: OxumAuthInterceptor,
+            useFactory: AuthInterceptorFactory,
+            deps: [
+                OxumAuthService,
+            ],
+        },
+    ],
+    bootstrap: [AppComponent],
+})
+
+export class AppModule {
+}
+
+```
