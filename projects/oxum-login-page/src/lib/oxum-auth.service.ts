@@ -1,24 +1,20 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
+import {FIREBASE_OPTIONS} from '@angular/fire';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {FirebaseOptions} from '@angular/fire/firebase.app.module';
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from 'angularx-social-login';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import firebase from 'firebase';
+import {BehaviorSubject, from, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
-
-interface iToken {
-    text: string;
-    id: string;
-    socialUser: SocialUser;
-}
-
-enum TOKEN {
-    name = 'token',
-    socialUser = 'socialUser',
-}
+import {TOKEN} from './oxum-login.enums';
+import {iToken} from './oxum-login.interfaces';
+import UserCredential = firebase.auth.UserCredential;
 
 @Injectable()
 export class OxumAuthService {
     public isLogged$ = new BehaviorSubject<boolean>(!!this.token);
-    private gAuthenticated: boolean = false;
+    private socialAuthenticated: boolean = false;
 
     public set socialUser(socialUser: SocialUser) {
         window.sessionStorage.setItem(TOKEN.socialUser, JSON.stringify(socialUser));
@@ -29,7 +25,7 @@ export class OxumAuthService {
     }
 
     public get token(): string | null {
-        if (this.gAuthenticated) {
+        if (this.socialAuthenticated) {
             this.refreshToken();
         }
         return window.sessionStorage.getItem(TOKEN.name);
@@ -39,7 +35,12 @@ export class OxumAuthService {
         (token) && window.sessionStorage.setItem(TOKEN.name, token);
     }
 
-    constructor(private http: HttpClient, private authService: SocialAuthService) {
+    constructor(
+        private http: HttpClient,
+        private socialAuthService: SocialAuthService,
+        private angularFireAuth: AngularFireAuth,
+        @Inject(FIREBASE_OPTIONS) private firebaseOptions: FirebaseOptions,
+    ) {
     }
 
     private loginIn(): void {
@@ -47,8 +48,11 @@ export class OxumAuthService {
         console.log('successfully login in');
     }
 
-    login(url: string, username: string, password: string): Observable<iToken> {
-        return this.http.post<iToken>(url, {username, password}).pipe(tap((token) => {
+    login(url: string, username: string, password: string): Observable<iToken | UserCredential> {
+        return (!!this.firebaseOptions) ? from(this.angularFireAuth.signInWithEmailAndPassword(username, password)) : this.http.post<iToken>(url, {
+            username,
+            password,
+        }).pipe(tap((token) => {
             this.token = token.id;
             this.socialUser = token.socialUser;
             this.loginIn();
@@ -60,7 +64,7 @@ export class OxumAuthService {
         return obs.pipe(tap(() => {
             sessionStorage.removeItem(TOKEN.name);
             sessionStorage.removeItem(TOKEN.socialUser);
-            if (this.gAuthenticated) {
+            if (this.socialAuthenticated) {
                 this.signOutWithGoogle();
             }
             this.isLogged$.next(false);
@@ -68,22 +72,21 @@ export class OxumAuthService {
     }
 
     signInWithGoogle(): void {
-        this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((socialUser) => {
+        this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then((socialUser) => {
             this.socialUser = socialUser;
             this.token = socialUser.idToken;
             this.loginIn();
-            this.gAuthenticated = true;
+            this.socialAuthenticated = true;
         });
     }
 
-
     refreshToken(): void {
-        this.authService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID);
+        this.socialAuthService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID);
     }
 
     private signOutWithGoogle(): void {
-        this.authService.signOut().then(() => {
-            this.gAuthenticated = false;
+        this.socialAuthService.signOut().then(() => {
+            this.socialAuthenticated = false;
         });
     }
 }

@@ -127,6 +127,10 @@
               "devServerTarget": "oxum-login-page-demo:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     },

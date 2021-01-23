@@ -21,16 +21,18 @@
                     [ngClass]="{'loading': loading}"
                     class="p-col-12 p-mt-3"
                     icon="pi pi-sign-in"
-                    [disabled]="disabled">
+                    [disabled]="disabled"
+                >
                 </button>
             </div>
-            <div class="p-inputgroup" *ngIf="enableSignInWithGoogle">
+            <div class="p-inputgroup">
                 <button
                     pButton
                     [label]="'Sign in with Google'"
                     class="p-col-12 p-mt-3"
-                    (click)="this.authService.signInWithGoogle()"
-                    icon="pi pi-google">
+                    (click)="authService.signInWithGoogle()"
+                    icon="pi pi-google"
+                >
                 </button>
             </div>
             <p-message *ngIf="error" severity="error" text="Wrong user or password" class="p-d-flex p-mt-4"></p-message>

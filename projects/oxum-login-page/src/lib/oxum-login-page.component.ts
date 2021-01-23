@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {delay} from 'rxjs/operators';
 import {OxumAuthService} from './oxum-auth.service';
+import {OAUTHMETHOD} from './oxum-login.enums';
 
 @Component({
     selector: 'oxum-login-page',
@@ -9,8 +10,8 @@ import {OxumAuthService} from './oxum-auth.service';
     styleUrls: ['./oxum-login-page.component.less'],
 })
 export class OxumLoginPageComponent implements OnInit {
+    public OAUTHMETHOD = OAUTHMETHOD;
     @Input() loginUrl: string = '';
-    @Input() enableSignInWithGoogle: boolean | undefined;
     public buttonLabel = 'Login';
     @Input() logoPath: string = 'assets/logo.png';
     public loginForm: FormGroup = new FormGroup({
@@ -46,13 +47,12 @@ export class OxumLoginPageComponent implements OnInit {
             this.authService.login(this.loginUrl, username, password)
                 .pipe(delay(2000))
                 .subscribe(
-                    () => {
+                    (token) => {
+                        console.log('logged in', token);
                     },
                     () => {
                         this.error = true;
                         this.toggleLoading();
-                    },
-                    () => {
                     },
                 );
         }

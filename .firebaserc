@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "mdc-europe-79a4e": {
+      "hosting": {
+        "oxum-login-page-demo": [
+          "mdc-europe-79a4e"
+        ]
+      }
+    }
+  }
+}
