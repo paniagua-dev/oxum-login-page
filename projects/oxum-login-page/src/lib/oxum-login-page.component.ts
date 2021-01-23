@@ -12,8 +12,9 @@ import {OAUTHMETHOD} from './oxum-login.enums';
 export class OxumLoginPageComponent implements OnInit {
     public OAUTHMETHOD = OAUTHMETHOD;
     @Input() loginUrl: string = '';
-    public buttonLabel = 'Login';
+    @Input() enableSignInWithGoogle: boolean | undefined;
     @Input() logoPath: string = 'assets/logo.png';
+    public buttonLabel = 'Login';
     public loginForm: FormGroup = new FormGroup({
         username: new FormControl(''),
         password: new FormControl(''),
