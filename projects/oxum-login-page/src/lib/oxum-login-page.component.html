@@ -25,7 +25,7 @@
                 >
                 </button>
             </div>
-            <div class="p-inputgroup">
+            <div class="p-inputgroup" *ngIf="enableSignInWithGoogle">
                 <button
                     pButton
                     [label]="'Sign in with Google'"

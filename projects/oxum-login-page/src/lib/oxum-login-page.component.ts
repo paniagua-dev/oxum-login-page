@@ -1,4 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
+import {FIREBASE_OPTIONS} from '@angular/fire';
+import {FirebaseOptions} from '@angular/fire/firebase.app.module';
 import {FormControl, FormGroup} from '@angular/forms';
 import {delay} from 'rxjs/operators';
 import {OxumAuthService} from './oxum-auth.service';
@@ -26,7 +28,9 @@ export class OxumLoginPageComponent implements OnInit {
         return !this.loginForm.valid;
     }
 
-    constructor(public authService: OxumAuthService) {
+    constructor(
+        public authService: OxumAuthService,
+        @Inject(FIREBASE_OPTIONS) public firebaseOptions: FirebaseOptions) {
     }
 
     ngOnInit(): void {

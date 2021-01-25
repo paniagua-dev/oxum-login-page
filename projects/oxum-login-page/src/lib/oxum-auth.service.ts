@@ -49,14 +49,25 @@ export class OxumAuthService {
     }
 
     login(url: string, username: string, password: string): Observable<iToken | UserCredential> {
-        return (!!this.firebaseOptions) ? from(this.angularFireAuth.signInWithEmailAndPassword(username, password)) : this.http.post<iToken>(url, {
-            username,
-            password,
-        }).pipe(tap((token) => {
-            this.token = token.id;
-            this.socialUser = token.socialUser;
-            this.loginIn();
-        }));
+        return (!!this.firebaseOptions) ?
+            from(this.angularFireAuth.signInWithEmailAndPassword(username, password)).pipe(tap(async (token) => {
+                this.loginIn();
+                this.socialUser = <SocialUser>{
+                    email: username,
+                    photoUrl: '',
+                };
+                if (token.user) {
+                    this.token = await token.user?.getIdToken();
+                }
+            })) :
+            this.http.post<iToken>(url, {
+                username,
+                password,
+            }).pipe(tap((token) => {
+                this.token = token.id;
+                this.socialUser = token.socialUser;
+                this.loginIn();
+            }));
     }
 
     logout(url?: string): Observable<any> {
