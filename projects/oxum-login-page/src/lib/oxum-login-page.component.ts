@@ -1,6 +1,5 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
-import {FIREBASE_OPTIONS} from '@angular/fire';
-import {FirebaseOptions} from '@angular/fire/firebase.app.module';
+import {FIREBASE_OPTIONS, FirebaseOptions} from '@angular/fire';
 import {FormControl, FormGroup} from '@angular/forms';
 import {delay} from 'rxjs/operators';
 import {OxumAuthService} from './oxum-auth.service';

@@ -1,8 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {FIREBASE_OPTIONS} from '@angular/fire';
+import {FIREBASE_OPTIONS, FirebaseOptions} from '@angular/fire';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {FirebaseOptions} from '@angular/fire/firebase.app.module';
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from 'angularx-social-login';
 import firebase from 'firebase';
 import {BehaviorSubject, from, Observable, of} from 'rxjs';
